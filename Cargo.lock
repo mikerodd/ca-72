@@ -317,6 +317,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "ca72-engine"
+version = "0.2.3"
+dependencies = [
+ "ca72",
+ "ca72-analysis",
+ "ca72-rt",
+ "libm",
+ "nih_plug",
+ "plugin-kit-stereo",
+]
+
+[[package]]
 name = "ca72-lab"
 version = "0.2.3"
 dependencies = [
@@ -327,6 +339,15 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
+]
+
+[[package]]
+name = "ca72-lv2"
+version = "0.2.3"
+dependencies = [
+ "ca72",
+ "ca72-engine",
+ "lv2-sys",
 ]
 
 [[package]]
@@ -345,6 +366,7 @@ dependencies = [
  "baseview 0.1.0",
  "ca72",
  "ca72-analysis",
+ "ca72-engine",
  "ca72-panel",
  "ca72-rt",
  "clap-sys",
@@ -1256,6 +1278,12 @@ name = "log"
 version = "0.4.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f9f8bd3e56ce4dfc153cf470fffbfa98c7620958b312ca5c3a4b8d5181fd13c6"
+
+[[package]]
+name = "lv2-sys"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9dd0f9e7de3649dcec348de51cbf611ab88688b97c0ce038f8c07b996b2a8e30"
 
 [[package]]
 name = "mach2"

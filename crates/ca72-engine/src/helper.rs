@@ -31,11 +31,11 @@ struct Shared {
     quit: AtomicBool,
     /// While set, a round waits before it begins, `held` set meanwhile; `ended`, set as the
     /// thread ends (the tests').
-    #[cfg(test)]
+    #[cfg(any(test, feature = "test-helpers"))]
     hold: AtomicBool,
-    #[cfg(test)]
+    #[cfg(any(test, feature = "test-helpers"))]
     held: AtomicBool,
-    #[cfg(test)]
+    #[cfg(any(test, feature = "test-helpers"))]
     ended: AtomicBool,
 }
 
@@ -112,7 +112,7 @@ fn help(s: &Shared, spares: &Spares, crew: &Crew, calibration: &Calibration) {
             }
             continue;
         }
-        #[cfg(test)]
+        #[cfg(any(test, feature = "test-helpers"))]
         hold(s);
         if asks & MEND != 0 {
             spares.mend_until(quit);
@@ -122,12 +122,12 @@ fn help(s: &Shared, spares: &Spares, crew: &Crew, calibration: &Calibration) {
             crew.serve();
         }
     }
-    #[cfg(test)]
+    #[cfg(any(test, feature = "test-helpers"))]
     s.ended.store(true, Ordering::Release);
 }
 
 /// A round held while the test holds it.
-#[cfg(test)]
+#[cfg(any(test, feature = "test-helpers"))]
 fn hold(s: &Shared) {
     while s.hold.load(Ordering::Acquire) {
         s.held.store(true, Ordering::Release);
@@ -136,31 +136,31 @@ fn hold(s: &Shared) {
 }
 
 /// What the tests see of a helper, and hold it by, after it is dropped too.
-#[cfg(test)]
+#[cfg(any(test, feature = "test-helpers"))]
 #[derive(Debug, Clone)]
-pub(crate) struct Watch(Arc<Shared>);
+pub struct Watch(Arc<Shared>);
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-helpers"))]
 impl Watch {
     /// Its next round held before it begins (`true`), or let go.
-    pub(crate) fn hold(&self, on: bool) {
+    pub fn hold(&self, on: bool) {
         self.0.hold.store(on, Ordering::Release);
     }
 
     /// Whether a round is being held.
-    pub(crate) fn held(&self) -> bool {
+    pub fn held(&self) -> bool {
         self.0.held.load(Ordering::Acquire)
     }
 
     /// Whether the thread has ended.
-    pub(crate) fn ended(&self) -> bool {
+    pub fn ended(&self) -> bool {
         self.0.ended.load(Ordering::Acquire)
     }
 }
 
-#[cfg(test)]
+#[cfg(any(test, feature = "test-helpers"))]
 impl Helper {
-    pub(crate) fn watch(&self) -> Watch {
+    pub fn watch(&self) -> Watch {
         Watch(self.shared.clone())
     }
 }

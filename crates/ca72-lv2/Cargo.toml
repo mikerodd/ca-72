@@ -1,0 +1,37 @@
+[package]
+name = "ca72-lv2"
+description = "The CA-72 as an LV2 plug-in (Zynthian)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+# Prints the bundle's manifest.ttl and dsp.ttl from the port table (`crates/ca72-lv2/CA-72.lv2`).
+[[bin]]
+name = "ca72-ttl"
+path = "src/bin/ttl.rs"
+
+[dependencies]
+ca72.workspace = true
+# The audio engine, apart from any plug-in format; the `nih-plug` feature is not taken (the
+# LV2 plug-in keeps DRIVE's curve itself).
+ca72-engine.workspace = true
+# The raw LV2 C bindings (rust-lv2's, generated for the target): the plug-in is written against
+# the C ABI, its 63 control ports a table (`params.rs`) that also generates the bundle's TTL.
+lv2-sys = "2.0"
+
+# The workspace's lints, spelled out: they cannot be inherited (`workspace = true`) and then
+# overridden, and this crate must allow `unsafe_code` (the LV2 C ABI is unsafe by nature).
+[lints.rust]
+unsafe_code = "allow"
+missing_debug_implementations = "warn"
+
+[lints.clippy]
+dbg_macro = "warn"
+todo = "warn"
+undocumented_unsafe_blocks = "warn"
+unwrap_used = "warn"

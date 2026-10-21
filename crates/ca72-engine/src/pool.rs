@@ -91,7 +91,7 @@ impl Budget {
         }
     }
 
-    #[cfg(test)]
+    #[cfg(any(test, feature = "test-helpers"))]
     pub(crate) fn held(&self) -> usize {
         self.held.load(Ordering::Acquire)
     }
@@ -127,6 +127,12 @@ pub(crate) static BUDGET: Budget = Budget {
     most: crate::engine::default_workers,
     held: AtomicUsize::new(0),
 };
+
+/// How many workers the process's pools hold together (the paper crates' tests').
+#[cfg(any(test, feature = "test-helpers"))]
+pub fn budget_held() -> usize {
+    BUDGET.held()
+}
 
 /// What a run offers the workers.
 struct Board<V> {

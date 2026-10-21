@@ -15,6 +15,7 @@ repository = "https://github.com/idlefoundry/ca-72"
 [workspace.dependencies]
 ca72 = { path = "crates/ca72" }
 ca72-analysis = { path = "crates/ca72-analysis" }
+ca72-engine = { path = "crates/ca72-engine" }
 ca72-rt = { path = "crates/ca72-rt" }
 ca72-spice = { path = "crates/ca72-spice" }
 

@@ -1,0 +1,32 @@
+[package]
+name = "ca72-engine"
+description = "The CA-72's audio engine apart from any plug-in format"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[features]
+# The curve's persistence with the session (`drive.rs`), for the host-named framework: the
+# nih-plug plug-in takes it, the LV2 plug-in does not.
+nih-plug = ["dep:nih_plug"]
+# The tests' view of the shared budget and the helper's rounds (`pool.rs`, `helper.rs`), for
+# the paper format crates' own tests: their unit tests are compiled apart from this crate, so
+# `cfg(test)` does not reach it.
+test-helpers = []
+
+[dependencies]
+ca72.workspace = true
+# The workers' real-time scheduling (decisions.md R11).
+ca72-rt.workspace = true
+libm.workspace = true
+plugin-kit-stereo = { git = "https://github.com/idlefoundry/plugin-kit", rev = "4c0f0f31041cb28b9dc803996dd01d8f44af5ce8" }
+nih_plug = { workspace = true, optional = true }
+
+[dev-dependencies]
+# The engine's own tests measure a pitch (`engine.rs`), as they did in the plug-in crate.
+ca72-analysis.workspace = true
+
+[lints]
+workspace = true

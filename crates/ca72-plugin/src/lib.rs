@@ -2,12 +2,8 @@
 //! played by MIDI, its EXTERNAL INPUT the side chain; one voice, or with POLY one per note
 //! (up to ten), placed across the stereo output by SPREAD.
 
-pub mod character;
 pub mod compat;
-pub mod drive;
 pub mod editor;
-pub mod engine;
-pub mod helper;
 pub mod learn;
 pub mod learning;
 pub mod library;
@@ -15,9 +11,11 @@ pub mod local_notes;
 pub mod opening;
 pub mod params;
 pub mod playing;
-pub mod pool;
 pub mod presets;
 mod resizing;
+// The audio engine, apart from any plug-in format (`crates/ca72-engine`), re-exported so that
+// this plug-in's own modules and tests keep reaching it as `crate::engine` and the like.
+pub use ca72_engine::{character, drive, engine, helper, pool};
 pub mod settings;
 #[cfg(feature = "standalone-production")]
 pub mod standalone_error;
@@ -1705,7 +1703,7 @@ mod tests {
         let _one = BUDGET_TESTS
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
-        let held = || crate::pool::BUDGET.held();
+        let held = || crate::pool::budget_held();
         // (A machine of 1 or 2 processors has none to give, one of 3 to 7 one: R11, R39.
         // CI's have 3 or 4.)
         let most = crate::engine::default_workers();
@@ -1741,7 +1739,7 @@ mod tests {
         let _one = BUDGET_TESTS
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
-        let held = || crate::pool::BUDGET.held();
+        let held = || crate::pool::budget_held();
         let p = initialised(true);
         assert_eq!(held(), p.engine.workers());
         let watch = p.helper.as_ref().map(Helper::watch).unwrap();

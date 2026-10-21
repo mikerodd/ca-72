@@ -17,6 +17,7 @@
 use std::ops::Deref;
 use std::sync::Arc;
 
+#[cfg(feature = "nih-plug")]
 use nih_plug::params::persist::PersistentField;
 use plugin_kit_stereo::auto_gain::{self, Measure};
 
@@ -125,7 +126,9 @@ impl Calibration {
 }
 
 /// The curve saved and loaded with the session: a session's replaces the instance's (one
-/// saved before DRIVE has none, and is given the average by `filter_state`).
+/// saved before DRIVE has none, and is given the average by `filter_state`). For nih-plug's
+/// `#[persist]` field (`features = ["nih-plug"]`); the LV2 plug-in keeps the curve itself.
+#[cfg(feature = "nih-plug")]
 impl<'a> PersistentField<'a, Saved> for Calibration {
     fn set(&self, new_value: Saved) {
         self.load(&new_value);

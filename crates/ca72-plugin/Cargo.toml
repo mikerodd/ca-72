@@ -35,6 +35,9 @@ harness = false
 
 [dependencies]
 ca72.workspace = true
+# The audio engine, apart from any plug-in format; the `nih-plug` feature gives the curve its
+# `PersistentField` (the `#[persist]` field in `params.rs`).
+ca72-engine = { workspace = true, features = ["nih-plug"] }
 # The workers' real-time scheduling (decisions.md R11).
 ca72-rt.workspace = true
 libm.workspace = true
@@ -80,6 +83,9 @@ x11rb = { version = "0.13.0", features = ["randr"] }
 ca72-analysis.workspace = true
 ca72-rt.workspace = true
 tempfile.workspace = true
+# The tests' view of the shared budget and the helper's rounds: this crate's unit tests are
+# compiled apart from the engine's, so `cfg(test)` there is false and the feature stands in.
+ca72-engine = { workspace = true, features = ["test-helpers"] }
 # A CLAP host in the tests (`tests/clap_host.rs`, decisions.md R34): the bindings nih-plug's CLAP
 # wrapper takes, at its revision.
 clap-sys = { git = "https://github.com/micahrj/clap-sys.git", rev = "25d7f53fdb6363ad63fbd80049cb7a42a97ac156" }
